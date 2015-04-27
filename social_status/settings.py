@@ -76,8 +76,17 @@ WSGI_APPLICATION = 'social_status.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE':   'django.db.backends.postgresql_psycopg2',
+        'NAME':     'social_status',
+
+        # FIXME: These are only good for development
+        'USER':     'social_status',
+        'PASSWORD': '',
+        'HOST':     '',
+        'PORT':     '',
+
+        # We want requests wrapped in transactions and rolled back on failure by default
+        'ATOMIC_REQUESTS': True,
     }
 }
 

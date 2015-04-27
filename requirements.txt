@@ -1,7 +1,9 @@
 Django==1.8
+django-facebook==6.0.2
 hamlpy==0.82.2
 Markdown==2.6.2
 pep8==1.6.2
 psycopg2==2.6
 Pygments==2.0.2
 PyYAML==3.11
+Unidecode==0.4.17

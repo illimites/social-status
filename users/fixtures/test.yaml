@@ -1,0 +1,10 @@
+- model: auth.User
+  pk: 1
+  fields:
+    password:     sha1$dbaa5$3db9526fce4abcf0f6e78e1f3a777d9a423b9460 # password: admin
+    username:     admin
+    email:        admin@example.com
+    is_active:    True
+    is_staff:     True
+    is_superuser: True
+

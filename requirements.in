@@ -1,0 +1,6 @@
+# Read Release Notes carefully before upgrading Django: https://docs.djangoproject.com/en/dev/releases/
+Django == 1.8
+
+psycopg2
+pyyaml
+hamlpy

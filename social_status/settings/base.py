@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ob5i#m4xys_hjhr+!m#-7)vpoum!83q%76bdf9nd9ndw+y22#_'
+#SECRET_KEY =
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG =
 
 ALLOWED_HOSTS = []
 
@@ -83,13 +83,11 @@ WSGI_APPLICATION = 'social_status.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':   'django.db.backends.postgresql_psycopg2',
-        'NAME':     'social_status',
-
-        # FIXME: These are only good for development
-        'USER':     'social_status',
-        'PASSWORD': '',
-        'HOST':     '',
-        'PORT':     '',
+        #'NAME':     'social_status',
+        #'USER':     'social_status',
+        #'PASSWORD': '',
+        #'HOST':     '',
+        #'PORT':     '',
 
         # We want requests wrapped in transactions and rolled back on failure by default
         'ATOMIC_REQUESTS': True,
@@ -102,7 +100,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Warsaw'
+#TIME_ZONE =
 
 USE_I18N = True
 

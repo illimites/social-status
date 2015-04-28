@@ -11,6 +11,9 @@ SECRET_KEY = 'ob5i#m4xys_hjhr+!m#-7)vpoum!83q%76bdf9nd9ndw+y22#_'
 
 TIME_ZONE = 'Europe/Warsaw'
 
+LOGGING['handlers']['console']['level']     = 'DEBUG'
+LOGGING['handlers']['raw_console']['level'] = 'DEBUG'
+
 # Keep at least one entry on this list in development because otherwise you won't see
 # your custom e-mains to admins printed to the console.
 ADMINS = (

@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = "{}/..".format(BASE_DIR)
 
 
 # Quick-start development settings - unsuitable for production
@@ -113,3 +114,115 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'log_file': {
+            'format': '%(asctime)s %(levelname)-8s | %(message)s'
+        },
+        'console': {
+            'format':  '%(asctime)s %(levelname)-8s | %(message)s',
+            'datefmt': '%H:%M:%S'
+        },
+        'raw_console': {
+            'format':  '%(message)s',
+        }
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level':   'ERROR',
+            'filters': ['require_debug_false'],
+            'class':   'django.utils.log.AdminEmailHandler'
+        },
+        'application_log': {
+            'level':     'INFO',
+            'class':     'logging.FileHandler',
+            'filename':  '{}/application.log'.format(ROOT_DIR),
+            'formatter': 'log_file'
+        },
+        'console': {
+            'level':     'INFO',
+            'class':     'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        'raw_console': {
+            # Just like 'console' (keep parameters in sync) but For loggers that already include
+            # all extra info (e.g. time) in their messages. One example is web server output.
+            'level':     'INFO',
+            'class':     'logging.StreamHandler',
+            'formatter': 'raw_console'
+        }
+    },
+    'loggers': {
+        # NOTE: There are a few important caveats you need to consider when tweaking logging:
+        # - If a message is logged to logger 'a.b' and propagates to logger 'a', only the level of logger
+        #   'a.b' counts. Level of logger 'a' is ignored. Not kidding. See the diagram:
+        #   https://docs.python.org/2/howto/logging.html#logging-flow
+        # - level of logger 'a.b' determines not only what it handles but also what it propagates to parent.
+        # - If a logger has no level, it inherits level from parent. Root logger (the one called '') has level WARNING by default.
+
+        # RULES: Try to stick to the following conventions:
+        # - Don't set level of a logger unless you explicitly want to prevent some messages from being handled or propagated.
+        # - In most cases it's better to leave level at DEBUG here and set level in handler instead.
+        # - Set level explicitly if you don't propagate. Such a logger should not be dependent on parent's level.
+        # - Don't propagate to the root logger if the output is very verbose. Use a separate handler/file instead.
+        # - Log at INFO level should be concise and contain only important stuff. Enough to understand what
+        #   is happening but not necessarily why. DEBUG level can be more spammy.
+
+        '': {
+            # NOTE: Changing level of this logger will change levels of loggers from plugins
+            # because they often don't have a level set explicitly and inherit this one instead.
+            # NOTE: We're always logging to console (not just in development) because our management commands often
+            # print status into to the log but not directly to the console. Admin should see this info.
+            'handlers':  ['application_log', 'console'],
+            'level':     'DEBUG',
+            'propagate': False
+        },
+        'py.warnings': {
+            # Prevent Python from printing its warnings to the console. Our top-level logger already handles them.
+            # I'm not sure why this works but I think that the default py.warnings has a custom console handler
+            # attached and by defining it here we're overwriting it and disabling the handler.
+            'level':     'DEBUG',
+            'propagate': True
+        },
+        'django': {
+            # Redefine django logger without handlers. Otherwise errors propagated from django.request
+            # get logged to the console twice.
+            'handlers':  [],
+            'level':     'DEBUG',
+            'propagate': True
+        },
+        'django.db': {
+            # Filter out DEBUG messages. There are too many of them. Django logs all DB queries at this level.
+            'level':     'INFO',
+            'propagate': True
+        },
+        'django.request': {
+            # Level is DEBUG because we're leaving filtering up to the handler.
+            'handlers':  ['mail_admins'],
+            'level':     'DEBUG',
+            'propagate': True
+        },
+        'django_extensions.management.commands.runserver_plus': {
+            # Suppress default web server output and capture runserver_plus output instead.
+            # NOTE: When the built-in server gets started via runserver_plus command it logs info about HTTP requests
+            # to this logger in addition to printing them to the console. Normal runserver does not do this.
+            # Since our top-level logger prints everything, they would get displayed twice if propagated.
+            # NOTE: It seems that defining 'handlers' suppresses the default output of request info in runserver_plus.
+            # The exception tracebacks are still printed though.
+            # NOTE: Internally these messages get logged to a logger called 'werkzeug' but django-extensions
+            # uses a RedirectHandler which logs them here. 'werkzeug' logger cannot be reconfigured here because
+            # it gets configured by django-extensions dynamically on each request.
+            'handlers':  ['application_log', 'raw_console'],
+            'level':     'INFO',
+            'propagate': False
+        },
+    }
+}

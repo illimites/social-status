@@ -4,6 +4,9 @@ ENVIRONMENT = 'development'
 
 DEBUG = True
 
+for engine_config in TEMPLATES:
+    engine_config['OPTIONS']['string_if_invalid'] = "[%s is invalid]"
+
 SECRET_KEY = 'ob5i#m4xys_hjhr+!m#-7)vpoum!83q%76bdf9nd9ndw+y22#_'
 
 TIME_ZONE = 'Europe/Warsaw'

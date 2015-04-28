@@ -1,3 +1,7 @@
 from .development import *
 
 # Override default settings here
+
+# Uncomment to have e-mails stored in files in /tmp rather than printed to the console
+#EMAIL_BACKEND   = 'django.core.mail.backends.filebased.EmailBackend'
+#EMAIL_FILE_PATH = '/tmp/django-mail'
